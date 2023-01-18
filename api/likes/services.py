@@ -11,6 +11,9 @@ class LikeService:
         likes = Like.objects.filter(post=ObjectId(postId)).order_by('-created_at').all()
         return likes
     
+    def findLikeByUserIdAndPostId(self , postId , userId):
+        alreadyLiked = Like.objects.filter(post=postId , user = userId).first()
+        return alreadyLiked
 
     def saveLike(self , like):
         like.save()
