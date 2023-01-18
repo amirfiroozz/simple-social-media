@@ -2,10 +2,14 @@ from rest_framework.decorators import api_view
 from main.utils import send , parseBody
 from .services import UserServices
 from posts.services import PostService
+from likes.services import LikeService
+from comments.services import CommentService
 
 
 userService = UserServices()
 postService = PostService()
+commentService = CommentService()
+likeService = LikeService()
 
 
 @api_view(["GET","POST"])
@@ -27,6 +31,16 @@ def userPostsListCreateView(request , userId):
     else:
         postData = parseBody(request.body)
         return send(newUserPost(postData['content'] ,userId),200)
+    
+@api_view(["POST"])
+def userCommentCreateView(request , userId , postId):
+    commentData = parseBody(request.body)
+    return send(newUserComment(commentData['content'] , userId , postId),200)
+
+
+@api_view(["POST"])
+def userLikeCreateView(request , userId , postId):
+    return send(newUserLike(userId , postId),200)
 
 
 def showAllusers():
@@ -43,5 +57,12 @@ def showUserPosts(userId):
 
 def newUserPost(content , userId):
     return postService.toDict(postService.newPost(content , userService.getUser(userId)))
+
+def newUserComment(content ,userId , postId ):
+    return commentService.toDict(commentService.newComment(content , postService.getPost(postId) , userService.getUser(userId)))
+
+def newUserLike(userId , postId ):
+    return likeService.toDict(likeService.newLike(postService.getPost(postId) , userService.getUser(userId)))
+
 
 
