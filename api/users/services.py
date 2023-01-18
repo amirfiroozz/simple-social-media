@@ -8,6 +8,9 @@ class UserServices:
 
     def getUser(self , userId):
         return User.objects.filter(_id=ObjectId(userId)).first()
+    
+    def getUserByUsername(self , username):
+        return User.objects.filter(username=username).first()
 
     def newUser(self , username):
         return self.addUser(User(username = username))

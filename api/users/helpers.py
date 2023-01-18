@@ -14,6 +14,9 @@ def showAllusers():
     return send(userService.toListOfDict(userService.getAllUsers()))
 
 def newUser(username):
+    user = getUserByUsername(username)
+    if user!=None:
+        return sendError(Error.alreadyExistsError())
     return send(userService.toDict(userService.newUser(username)))
 
 def showUser(userId):
@@ -50,7 +53,6 @@ def newUserLike(userId , postId):
         return sendError(Error.postNotFoundedError())
     
     alreadyLiked = likeService.findLikeByUserIdAndPostId(postId , userId)
-    print(alreadyLiked)
     if alreadyLiked!=None:
         return sendError(Error.alreayLikedError())
     
@@ -61,3 +63,6 @@ def getPost(postId):
 
 def getUser(userId):
     return userService.getUser(userId)
+
+def getUserByUsername(username):
+    return userService.getUserByUsername(username)
