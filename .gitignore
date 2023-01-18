@@ -1,2 +1,12 @@
 env/
+todo
 api/db.sqlite3
+api/main/__*
+api/users/__*/
+api/posts/__*/
+api/comments/__*/
+api/likes/__*/
+api/users/migrations/
+api/posts/migrations/
+api/comments/migrations/
+api/likes/migrations/
