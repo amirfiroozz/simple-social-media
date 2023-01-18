@@ -20,7 +20,7 @@ class Error:
         return newError("user not founded" , 404)
     @staticmethod
     def alreayLikedError():
-        return newError("internal server error" , 409)
+        return newError("alreay liked" , 409)
     @staticmethod
     def internalError():
         return newError("internal server error" , 500)
