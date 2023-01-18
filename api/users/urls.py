@@ -4,4 +4,6 @@ from django.urls import path
 urlpatterns = [
     path('' , userCreateListView),
     path('<str:id>' , userView),
+    path('<str:userId>/posts' , userPostsListCreateView),
+
 ]
