@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  mongodb:
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27018:27017"
+  
+  main-service:
+    build:
+      context: ./api
+      dockerfile: ./main-service.dockerfile
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+  
+  
+
+
+
+
