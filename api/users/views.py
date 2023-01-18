@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
-from main.utils import send , parseBody
+from main.utils import send , sendError, parseBody
+from main.errors import Error
 from .services import UserServices
 from posts.services import PostService
 from likes.services import LikeService
@@ -15,54 +16,78 @@ likeService = LikeService()
 @api_view(["GET","POST"])
 def userCreateListView(request):
     if request.method=="GET":
-        return send(showAllusers() , 200)
+        return showAllusers()
     else:
         userData = parseBody(request.body)
-        return send(newUser(userData['username']) , 200)
+        return newUser(userData['username'])
         
 @api_view(["GET"])
 def userView(request , id):
-    return send(showUser(id) , 200)
+    return showUser(id)
 
 @api_view(["GET" , "POST"])
 def userPostsListCreateView(request , userId):
     if request.method=="GET":
-        return send(showUserPosts(userId) , 200)
+        return showUserPosts(userId)
     else:
         postData = parseBody(request.body)
-        return send(newUserPost(postData['content'] ,userId),200)
+        return newUserPost(postData['content'] ,userId)
     
 @api_view(["POST"])
 def userCommentCreateView(request , userId , postId):
     commentData = parseBody(request.body)
-    return send(newUserComment(commentData['content'] , userId , postId),200)
+    return newUserComment(commentData['content'] , userId , postId)
 
 
 @api_view(["POST"])
 def userLikeCreateView(request , userId , postId):
-    return send(newUserLike(userId , postId),200)
+    return newUserLike(userId , postId)
 
 
 def showAllusers():
-    return userService.toListOfDict(userService.getAllUsers())
+    return send(userService.toListOfDict(userService.getAllUsers()))
 
 def newUser(username):
-    return userService.toDict(userService.newUser(username))
+    return send(userService.toDict(userService.newUser(username)))
 
-def showUser(id):
-    return userService.toDict(userService.getUser(id))
+def showUser(userId):
+    user = getUser(userId)
+    if user==None:
+        return sendError(Error.userNotFoundedError())
+    return send(userService.toDict(user))
 
 def showUserPosts(userId):
-    return postService.toListOfDict(postService.getAllPostByUserId(userId))
+    return send(postService.toListOfDict(postService.getAllPostByUserId(userId)))
 
 def newUserPost(content , userId):
-    return postService.toDict(postService.newPost(content , userService.getUser(userId)))
+    user = getUser(userId)
+    if user==None:
+        return sendError(Error.userNotFoundedError())
+    return send(postService.toDict(postService.newPost(content , user)))
 
 def newUserComment(content ,userId , postId ):
-    return commentService.toDict(commentService.newComment(content , postService.getPost(postId) , userService.getUser(userId)))
+    user = getUser(userId)
+    if user==None:
+        return sendError(Error.userNotFoundedError())
+    post = getPost(postId)
+    if post==None:
+        return sendError(Error.postNotFoundedError())
+    return send (commentService.toDict(commentService.newComment(content , post , user)))
 
 def newUserLike(userId , postId ):
-    return likeService.toDict(likeService.newLike(postService.getPost(postId) , userService.getUser(userId)))
+    user = getUser(userId)
+    if user==None:
+        return sendError(Error.userNotFoundedError())
+    post = getPost(postId)
+    if post==None:
+        return sendError(Error.postNotFoundedError())
+    return send(likeService.toDict(likeService.newLike(post , user)))
+
+def getPost(postId):
+    return postService.getPost(postId)
+
+def getUser(userId):
+    return userService.getUser(userId)
 
 
 
