@@ -11,6 +11,18 @@ class Error:
     
     def responseStatus(self):
         return self.status
+    
+    def postNotFoundedError(self):
+        return newError("post not founded" , 404)
+    
+    def userNotFoundedError(self):
+        return newError("user not founded" , 404)
+    
+    def alreayLikedError(self):
+        return newError("internal server error" , 409)
+    
+    def internalError(self):
+        return newError("internal server error" , 500)
 
 
 def newError(msg , status):
