@@ -81,7 +81,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'django_social_media',
-    }
+        'CLIENT': {
+            'host': 'mongodb://mongodb:27017',
+        }
+    },
 }
 
 
