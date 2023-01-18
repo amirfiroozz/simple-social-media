@@ -40,13 +40,20 @@ def newUserComment(content ,userId , postId ):
         return sendError(Error.postNotFoundedError())
     return send (commentService.toDict(commentService.newComment(content , post , user)))
 
-def newUserLike(userId , postId ):
+def newUserLike(userId , postId):
     user = getUser(userId)
     if user==None:
         return sendError(Error.userNotFoundedError())
+    
     post = getPost(postId)
     if post==None:
         return sendError(Error.postNotFoundedError())
+    
+    alreadyLiked = likeService.findLikeByUserIdAndPostId(postId , userId)
+    print(alreadyLiked)
+    if alreadyLiked!=None:
+        return sendError(Error.alreayLikedError())
+    
     return send(likeService.toDict(likeService.newLike(post , user)))
 
 def getPost(postId):

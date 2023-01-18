@@ -12,7 +12,7 @@ class LikeService:
         return likes
     
     def findLikeByUserIdAndPostId(self , postId , userId):
-        alreadyLiked = Like.objects.filter(post=postId , user = userId).first()
+        alreadyLiked = Like.objects.filter(post=ObjectId(postId) , user = ObjectId(userId)).first()
         return alreadyLiked
 
     def saveLike(self , like):
