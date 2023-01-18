@@ -21,7 +21,7 @@ class LikeService:
         try:
             return {
                 "_id":str(like._id),
-                "user_username":like.user.username,
+                "username":like.user.username,
             }
         except:
             return like
